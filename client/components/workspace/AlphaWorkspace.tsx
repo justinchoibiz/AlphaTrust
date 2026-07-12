@@ -12,6 +12,14 @@ import { ExpressionSection } from "@/components/workspace/ExpressionSection";
 import { TripleBarrierSection } from "@/components/workspace/TripleBarrierSection";
 import { RunDiagnosticSection } from "@/components/workspace/RunDiagnosticSection";
 import { ResultSection } from "@/components/workspace/ResultSection";
+import { DatasetSection } from "@/components/workspace/DatasetSection";
+import { BarSection } from "@/components/workspace/BarSection";
+import { FeatureSection } from "@/components/workspace/FeatureSection";
+import { LabelingSection } from "@/components/workspace/LabelingSection";
+import { SampleWeightsSection } from "@/components/workspace/SampleWeightsSection";
+import { PurgedCvSection } from "@/components/workspace/PurgedCvSection";
+import { EmbargoSection } from "@/components/workspace/EmbargoSection";
+import { BetSizingSection } from "@/components/workspace/BetSizingSection";
 
 type AlphaWorkspaceProps = {
   projectId: string;
@@ -71,15 +79,71 @@ export function AlphaWorkspace({ projectId }: AlphaWorkspaceProps) {
         </div>
 
         <div className="space-y-5">
-          <ProjectSummarySection project={project} alphaCase={alphaCase} />
-          <ExpressionSection projectId={projectId} alphaCase={alphaCase} />
-          <TripleBarrierSection projectId={projectId} alphaCase={alphaCase} />
-          <RunDiagnosticSection projectId={projectId} alphaCase={alphaCase} />
-          <ResultSection
-            projectId={projectId}
-            diagnosticResult={diagnosticResult ?? null}
-          />
-        </div>
+  <ProjectSummarySection
+    project={project}
+    alphaCase={alphaCase}
+  />
+
+  <DatasetSection
+    projectId={projectId}
+    alphaCase={alphaCase}
+  />
+
+  <BarSection
+    projectId={projectId}
+    alphaCase={alphaCase}
+  />
+
+  <FeatureSection
+    projectId={projectId}
+    alphaCase={alphaCase}
+  />
+
+  <ExpressionSection
+    projectId={projectId}
+    alphaCase={alphaCase}
+  />
+
+  <LabelingSection
+    projectId={projectId}
+    alphaCase={alphaCase}
+  />
+
+  <TripleBarrierSection
+    projectId={projectId}
+    alphaCase={alphaCase}
+  />
+
+  <SampleWeightsSection
+    projectId={projectId}
+    alphaCase={alphaCase}
+  />
+
+  <PurgedCvSection
+    projectId={projectId}
+    alphaCase={alphaCase}
+  />
+
+  <EmbargoSection
+    projectId={projectId}
+    alphaCase={alphaCase}
+  />
+
+  <BetSizingSection
+    projectId={projectId}
+    alphaCase={alphaCase}
+  />
+
+  <RunDiagnosticSection
+    projectId={projectId}
+    alphaCase={alphaCase}
+  />
+
+  <ResultSection
+    projectId={projectId}
+    diagnosticResult={diagnosticResult ?? null}
+  />
+</div>
       </div>
     </AppShell>
   );

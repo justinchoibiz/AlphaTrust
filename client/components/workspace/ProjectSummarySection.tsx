@@ -50,8 +50,19 @@ export function ProjectSummarySection({
           </p>
         </div>
 
-        <Button onClick={() => unlockAndFocusSection("expression")}>
-          Continue to Expression
+        <Button
+          onClick={() => {
+            unlockAndFocusSection("dataset");
+
+            window.setTimeout(() => {
+              document.getElementById("dataset")?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }, 50);
+          }}
+        >
+          Continue to Dataset
         </Button>
       </div>
     </WorkspaceSection>

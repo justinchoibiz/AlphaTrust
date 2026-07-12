@@ -36,14 +36,20 @@ export function TripleBarrierSection({
         upperBarrierPct,
         lowerBarrierPct,
       }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["alpha-case", projectId] });
-      unlockAndFocusSection("run-diagnostic");
-      document.getElementById("run-diagnostic")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    },
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["alpha-case", projectId],
+        });
+      
+        unlockAndFocusSection("sample-weights");
+      
+        window.setTimeout(() => {
+          document.getElementById("sample-weights")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }, 50);
+      },
   });
 
   return (

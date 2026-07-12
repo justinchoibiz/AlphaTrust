@@ -26,12 +26,18 @@ export function ExpressionSection({ projectId, alphaCase }: ExpressionSectionPro
   const mutation = useMutation({
     mutationFn: () => updateAlphaCase(projectId, { expression }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["alpha-case", projectId] });
-      unlockAndFocusSection("triple-barrier");
-      document.getElementById("triple-barrier")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
+      queryClient.invalidateQueries({
+        queryKey: ["alpha-case", projectId],
       });
+    
+      unlockAndFocusSection("labeling");
+    
+      window.setTimeout(() => {
+        document.getElementById("labeling")?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 50);
     },
   });
 
