@@ -1,5 +1,4 @@
 import Link from "next/link";
-
 import { AppShell } from "@/components/layout/AppShell";
 import { routes } from "@/lib/constants/routes";
 
@@ -21,25 +20,31 @@ export default function LeaderboardPage() {
             Strategy Leaderboard
           </h1>
           <p className="mt-3 max-w-2xl text-neutral-400">
-            Public strategy ranking is out of scope for the current MVP. Later,
-            submitted AFML diagnostic reports can be ranked by DSR-adjusted
-            reliability, PSR, drawdown risk, and average uniqueness.
+            Public or internal strategy ranking is intentionally excluded from
+            the MVP. AlphaTrust currently focuses on alpha case creation, AFML
+            diagnostics, and report generation.
           </p>
         </div>
 
         <Card className="border-neutral-800 bg-neutral-900 text-neutral-50">
           <CardHeader>
-            <CardTitle>Out of Scope</CardTitle>
+            <CardTitle>Out of Scope for MVP</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-4 text-sm text-neutral-400">
             <p>
-              The current MVP focuses on alpha case creation, guided diagnostic
-              workflow, mock AFML result generation, and report presentation.
+              A leaderboard would require public/private permissions, ranking
+              rules, strategy visibility, report sharing, and anti-overfitting
+              disclaimers.
+            </p>
+
+            <p>
+              Later, ranking should not rely only on Sharpe Ratio. It should
+              include PSR, DSR, drawdown, leakage risk, and average uniqueness.
             </p>
 
             <Button asChild>
-              <Link href={routes.home}>Back to home</Link>
+              <Link href={routes.home}>Back to Home</Link>
             </Button>
           </CardContent>
         </Card>

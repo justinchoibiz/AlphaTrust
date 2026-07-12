@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink } from "lucide-react";
 
 import {
   getAlphaCase,
@@ -24,8 +24,6 @@ import {
 type DiagnosticReportProps = {
   projectId: string;
 };
-
-type RiskLevel = "low" | "medium" | "high" | "extreme";
 
 export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
   const { data: project, isLoading: isProjectLoading } = useQuery({
@@ -54,7 +52,9 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
   if (isLoading) {
     return (
       <AppShell>
-        <div className="px-8 py-10 text-neutral-400">Loading report...</div>
+        <div className="px-8 py-10 text-neutral-400">
+          Loading report...
+        </div>
       </AppShell>
     );
   }
@@ -67,7 +67,6 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
             <CardHeader>
               <CardTitle>No diagnostic report yet</CardTitle>
             </CardHeader>
-
             <CardContent className="space-y-4 text-sm text-neutral-400">
               <p>
                 Run the AFML diagnostic in the workspace before opening the
@@ -86,7 +85,7 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
     );
   }
 
-  const overallRisk = getOverallRiskLevel(diagnosticResult.risks);
+  const riskLevel = getOverallRiskLevel(diagnosticResult.risks);
 
   return (
     <AppShell>
@@ -104,7 +103,9 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
               </Link>
             </Button>
 
-            <p className="text-sm text-neutral-500">AFML Diagnostic Report</p>
+            <p className="text-sm text-neutral-500">
+              AFML Diagnostic Report
+            </p>
 
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-50">
               {project.name}
@@ -117,10 +118,17 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
             </p>
           </div>
 
-          <Button variant="outline" className="border-neutral-800">
-            <ExternalLink className="mr-2 h-4 w-4" />
-            Share
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" className="border-neutral-800">
+              <Download className="mr-2 h-4 w-4" />
+              Markdown
+            </Button>
+
+            <Button variant="outline" className="border-neutral-800">
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Share
+            </Button>
+          </div>
         </div>
 
         <div className="space-y-6">
@@ -128,7 +136,7 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
             <CardHeader>
               <div className="flex items-center justify-between gap-4">
                 <CardTitle>Executive Summary</CardTitle>
-                <RiskBadge risk={overallRisk} />
+                <RiskBadge risk={riskLevel} />
               </div>
             </CardHeader>
 
@@ -146,7 +154,7 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Expression
                 </p>
-                <pre className="mt-2 overflow-x-auto rounded-xl border border-neutral-800 bg-neutral-950 p-4 font-mono text-sm text-neutral-200">
+                <pre className="mt-2 rounded-xl border border-neutral-800 bg-neutral-950 p-4 font-mono text-sm text-neutral-200">
                   {alphaCase.expression}
                 </pre>
               </div>
@@ -155,7 +163,7 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
                 <p className="text-xs uppercase tracking-wide text-neutral-500">
                   Interpretation
                 </p>
-                <p className="mt-2 text-sm leading-6 text-neutral-300">
+                <p className="mt-2 text-sm text-neutral-300">
                   This expression is treated as an engineered alpha score
                   feature. The AFML diagnostic layer tests whether this signal
                   appears predictive of triple-barrier labels and whether the
@@ -223,7 +231,10 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
                   label="Feature redundancy"
                   risk={diagnosticResult.risks.featureRedundancyRisk}
                 />
-                <RiskBadge label="Data" risk={diagnosticResult.risks.dataRisk} />
+                <RiskBadge
+                  label="Data"
+                  risk={diagnosticResult.risks.dataRisk}
+                />
               </div>
             </CardContent>
           </Card>
@@ -307,7 +318,9 @@ function MetricCard({ label, value }: { label: string; value: string }) {
     <Card className="border-neutral-800 bg-neutral-900 text-neutral-50">
       <CardContent className="p-4">
         <p className="text-xs text-neutral-500">{label}</p>
-        <p className="mt-2 text-2xl font-semibold text-neutral-100">{value}</p>
+        <p className="mt-2 text-2xl font-semibold text-neutral-100">
+          {value}
+        </p>
       </CardContent>
     </Card>
   );
@@ -318,7 +331,7 @@ function RiskBadge({
   risk,
 }: {
   label?: string;
-  risk: RiskLevel;
+  risk: "low" | "medium" | "high" | "extreme";
 }) {
   const className =
     risk === "low"
@@ -346,22 +359,23 @@ function ConceptCard({
   return (
     <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
       <p className="text-sm font-medium text-neutral-200">{title}</p>
-      <p className="mt-2 text-xs leading-5 text-neutral-500">{description}</p>
+      <p className="mt-2 text-xs leading-5 text-neutral-500">
+        {description}
+      </p>
     </div>
   );
 }
 
 function getOverallRiskLevel(risks: {
-  leakageRisk: RiskLevel;
-  overfittingRisk: RiskLevel;
-  featureRedundancyRisk: RiskLevel;
-  dataRisk: RiskLevel;
+  leakageRisk: "low" | "medium" | "high" | "extreme";
+  overfittingRisk: "low" | "medium" | "high" | "extreme";
+  featureRedundancyRisk: "low" | "medium" | "high" | "extreme";
+  dataRisk: "low" | "medium" | "high" | "extreme";
 }) {
   const values = Object.values(risks);
 
   if (values.includes("extreme")) return "extreme";
   if (values.includes("high")) return "high";
   if (values.includes("medium")) return "medium";
-
   return "low";
 }
