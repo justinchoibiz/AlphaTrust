@@ -30,7 +30,7 @@ export type AssistantRole =
   | "diagnostic-assistant"
   | "report-assistant";
 
-const sectionRoleMap: Record<SectionId, AssistantRole> = {
+export const sectionRoleMap: Record<SectionId, AssistantRole> = {
   "project-summary": "conductor",
   dataset: "data-assistant",
   bars: "data-structure-assistant",
@@ -51,20 +51,26 @@ type UiState = {
   activeSectionId: SectionId;
   unlockedSectionIds: SectionId[];
   isAssistantOpen: boolean;
+  assistantLock: boolean;
+  hasInitializedWorkspace: boolean;
+
 
   setActiveProjectId: (projectId: string) => void;
   setActiveSectionId: (sectionId: SectionId) => void;
   unlockSection: (sectionId: SectionId) => void;
   unlockAndFocusSection: (sectionId: SectionId) => void;
   setAssistantOpen: (isOpen: boolean) => void;
-  getAssistantRole: () => AssistantRole;
+  setAssistantLock: (locked: boolean) => void;
+  setWorkspaceInitialized: () => void;
 };
 
-export const useUiStore = create<UiState>((set, get) => ({
+export const useUiStore = create<UiState>((set) => ({
   activeProjectId: null,
   activeSectionId: "project-summary",
   unlockedSectionIds: ["project-summary"],
   isAssistantOpen: true,
+  assistantLock: false,
+  hasInitializedWorkspace: false,
 
   setActiveProjectId: (projectId) => set({ activeProjectId: projectId }),
 
@@ -86,6 +92,20 @@ export const useUiStore = create<UiState>((set, get) => ({
     })),
 
   setAssistantOpen: (isAssistantOpen) => set({ isAssistantOpen }),
+  
+  setAssistantLock: (locked) =>
+    set({
+      assistantLock: locked,
+    }),
 
-  getAssistantRole: () => sectionRoleMap[get().activeSectionId],
+  setWorkspaceInitialized: () =>
+    set({
+      hasInitializedWorkspace: true,
+    }),
 }));
+
+export function getAssistantRoleForSection(
+  sectionId: SectionId,
+): AssistantRole {
+  return sectionRoleMap[sectionId];
+}

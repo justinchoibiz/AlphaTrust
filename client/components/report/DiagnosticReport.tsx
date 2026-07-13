@@ -14,12 +14,7 @@ import { routes } from "@/lib/constants/routes";
 import { AppShell } from "@/components/layout/AppShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type DiagnosticReportProps = {
   projectId: string;
@@ -51,17 +46,15 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
 
   if (isLoading) {
     return (
-      <AppShell>
-        <div className="px-8 py-10 text-neutral-400">
-          Loading report...
-        </div>
+      <AppShell assistantRole="report-assistant" assistantContextId="report">
+        <div className="px-8 py-10 text-neutral-400">Loading report...</div>
       </AppShell>
     );
   }
 
   if (!project || !alphaCase || isDiagnosticError || !diagnosticResult) {
     return (
-      <AppShell>
+      <AppShell assistantRole="report-assistant" assistantContextId="report">
         <div className="mx-auto max-w-4xl px-8 py-10">
           <Card className="border-neutral-800 bg-neutral-900 text-neutral-50">
             <CardHeader>
@@ -88,7 +81,7 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
   const riskLevel = getOverallRiskLevel(diagnosticResult.risks);
 
   return (
-    <AppShell>
+    <AppShell assistantRole="report-assistant" assistantContextId="report">
       <div className="mx-auto max-w-5xl px-8 py-10">
         <div className="mb-8 flex items-start justify-between gap-6">
           <div>
@@ -103,9 +96,7 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
               </Link>
             </Button>
 
-            <p className="text-sm text-neutral-500">
-              AFML Diagnostic Report
-            </p>
+            <p className="text-sm text-neutral-500">AFML Diagnostic Report</p>
 
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-50">
               {project.name}
@@ -318,9 +309,7 @@ function MetricCard({ label, value }: { label: string; value: string }) {
     <Card className="border-neutral-800 bg-neutral-900 text-neutral-50">
       <CardContent className="p-4">
         <p className="text-xs text-neutral-500">{label}</p>
-        <p className="mt-2 text-2xl font-semibold text-neutral-100">
-          {value}
-        </p>
+        <p className="mt-2 text-2xl font-semibold text-neutral-100">{value}</p>
       </CardContent>
     </Card>
   );
@@ -359,9 +348,7 @@ function ConceptCard({
   return (
     <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
       <p className="text-sm font-medium text-neutral-200">{title}</p>
-      <p className="mt-2 text-xs leading-5 text-neutral-500">
-        {description}
-      </p>
+      <p className="mt-2 text-xs leading-5 text-neutral-500">{description}</p>
     </div>
   );
 }

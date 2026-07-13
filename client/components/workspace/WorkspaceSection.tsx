@@ -49,14 +49,16 @@ export function WorkspaceSection({
   return (
     <section id={id} className="scroll-mt-8">
       <Card
-        onClick={() => setActiveSectionId(id)}
         className={
           isActive
             ? "border-neutral-600 bg-neutral-900 text-neutral-50"
             : "border-neutral-800 bg-neutral-950 text-neutral-300"
         }
       >
-        <CardHeader className="flex flex-row items-center gap-3">
+        <CardHeader
+          onClick={() => setActiveSectionId(id)}
+          className="flex cursor-pointer flex-row items-center gap-3"
+        >
           <CheckCircle2
             className={
               isActive ? "h-5 w-5 text-emerald-400" : "h-5 w-5 text-neutral-600"

@@ -3,7 +3,7 @@ import { ProjectList } from "@/components/home/ProjectList";
 
 export default function HomePage() {
   return (
-    <AppShell>
+    <AppShell assistantRole="conductor" assistantContextId="home">
       <div className="mx-auto max-w-5xl px-8 py-10">
         <div className="mb-8">
           <p className="text-sm text-neutral-500">Project Home</p>

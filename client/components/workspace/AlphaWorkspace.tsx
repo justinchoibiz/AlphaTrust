@@ -4,8 +4,14 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { AppShell } from "@/components/layout/AppShell";
-import { getAlphaCase, getProject, getDiagnosticResult } from "@/lib/api/mock-api";
+import {
+  getAlphaCase,
+  getProject,
+  getDiagnosticResult,
+} from "@/lib/api/mock-api";
 import { useUiStore } from "@/lib/store/ui-store";
+
+import { useActiveWorkspaceSection } from "@/hooks/use-active-workspace-section";
 
 import { ProjectSummarySection } from "@/components/workspace/ProjectSummarySection";
 import { ExpressionSection } from "@/components/workspace/ExpressionSection";
@@ -26,6 +32,7 @@ type AlphaWorkspaceProps = {
 };
 
 export function AlphaWorkspace({ projectId }: AlphaWorkspaceProps) {
+  useActiveWorkspaceSection();
   const setActiveProjectId = useUiStore((state) => state.setActiveProjectId);
 
   const { data: project, isLoading: isProjectLoading } = useQuery({
@@ -79,71 +86,35 @@ export function AlphaWorkspace({ projectId }: AlphaWorkspaceProps) {
         </div>
 
         <div className="space-y-5">
-  <ProjectSummarySection
-    project={project}
-    alphaCase={alphaCase}
-  />
+          <ProjectSummarySection project={project} alphaCase={alphaCase} />
 
-  <DatasetSection
-    projectId={projectId}
-    alphaCase={alphaCase}
-  />
+          <DatasetSection projectId={projectId} alphaCase={alphaCase} />
 
-  <BarSection
-    projectId={projectId}
-    alphaCase={alphaCase}
-  />
+          <BarSection projectId={projectId} alphaCase={alphaCase} />
 
-  <FeatureSection
-    projectId={projectId}
-    alphaCase={alphaCase}
-  />
+          <FeatureSection projectId={projectId} alphaCase={alphaCase} />
 
-  <ExpressionSection
-    projectId={projectId}
-    alphaCase={alphaCase}
-  />
+          <ExpressionSection projectId={projectId} alphaCase={alphaCase} />
 
-  <LabelingSection
-    projectId={projectId}
-    alphaCase={alphaCase}
-  />
+          <LabelingSection projectId={projectId} alphaCase={alphaCase} />
 
-  <TripleBarrierSection
-    projectId={projectId}
-    alphaCase={alphaCase}
-  />
+          <TripleBarrierSection projectId={projectId} alphaCase={alphaCase} />
 
-  <SampleWeightsSection
-    projectId={projectId}
-    alphaCase={alphaCase}
-  />
+          <SampleWeightsSection projectId={projectId} alphaCase={alphaCase} />
 
-  <PurgedCvSection
-    projectId={projectId}
-    alphaCase={alphaCase}
-  />
+          <PurgedCvSection projectId={projectId} alphaCase={alphaCase} />
 
-  <EmbargoSection
-    projectId={projectId}
-    alphaCase={alphaCase}
-  />
+          <EmbargoSection projectId={projectId} alphaCase={alphaCase} />
 
-  <BetSizingSection
-    projectId={projectId}
-    alphaCase={alphaCase}
-  />
+          <BetSizingSection projectId={projectId} alphaCase={alphaCase} />
 
-  <RunDiagnosticSection
-    projectId={projectId}
-    alphaCase={alphaCase}
-  />
+          <RunDiagnosticSection projectId={projectId} alphaCase={alphaCase} />
 
-  <ResultSection
-    projectId={projectId}
-    diagnosticResult={diagnosticResult ?? null}
-  />
-</div>
+          <ResultSection
+            projectId={projectId}
+            diagnosticResult={diagnosticResult ?? null}
+          />
+        </div>
       </div>
     </AppShell>
   );

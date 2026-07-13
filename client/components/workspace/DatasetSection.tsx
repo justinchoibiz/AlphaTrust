@@ -16,10 +16,7 @@ type DatasetSectionProps = {
   alphaCase: AlphaCase;
 };
 
-export function DatasetSection({
-  projectId,
-  alphaCase,
-}: DatasetSectionProps) {
+export function DatasetSection({ projectId }: DatasetSectionProps) {
   const queryClient = useQueryClient();
   const unlockAndFocusSection = useUiStore(
     (state) => state.unlockAndFocusSection,
