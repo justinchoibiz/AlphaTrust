@@ -58,5 +58,10 @@ export function useActiveWorkspaceSection() {
     return () => {
       observer.disconnect();
     };
-  }, [setActiveSectionId]);
+  }, [
+    assistantLock,
+    hasInitializedWorkspace,
+    setActiveSectionId,
+    setWorkspaceInitialized,
+  ]);
 }

@@ -51,7 +51,7 @@ export function AssistantPanel({
   contextIdOverride,
 }: AssistantPanelProps) {
   const [draft, setDraft] = useState("");
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const activeProjectId = useUiStore((state) => state.activeProjectId);
   const activeSectionId = useUiStore((state) => state.activeSectionId);
@@ -96,7 +96,12 @@ export function AssistantPanel({
   }, [config.welcomeMessage, ensureSession, role, sessionKey]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({
+    const viewport = scrollAreaRef.current?.querySelector<HTMLElement>(
+      "[data-slot='scroll-area-viewport']",
+    );
+
+    viewport?.scrollTo({
+      top: viewport.scrollHeight,
       behavior: "smooth",
     });
   }, [messages, isSending]);
@@ -228,7 +233,7 @@ export function AssistantPanel({
         </div>
       </header>
 
-      <ScrollArea className="min-h-0 flex-1">
+      <ScrollArea ref={scrollAreaRef} className="min-h-0 flex-1">
         <div className="space-y-4 p-4">
           {messages.map((message) => (
             <div
@@ -272,8 +277,6 @@ export function AssistantPanel({
               {error}
             </div>
           )}
-
-          <div ref={bottomRef} />
         </div>
       </ScrollArea>
 

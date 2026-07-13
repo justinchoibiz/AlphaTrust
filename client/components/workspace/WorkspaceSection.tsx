@@ -28,6 +28,17 @@ export function WorkspaceSection({
   const isActive = activeSectionId === id;
   const isUnlocked = unlockedSectionIds.includes(id);
 
+  const focusSection = () => {
+    setActiveSectionId(id);
+
+    requestAnimationFrame(() => {
+      document.getElementById(id)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  };
+
   if (!isUnlocked) {
     return (
       <section id={id} className="scroll-mt-8">
@@ -56,7 +67,7 @@ export function WorkspaceSection({
         }
       >
         <CardHeader
-          onClick={() => setActiveSectionId(id)}
+          onClick={focusSection}
           className="flex cursor-pointer flex-row items-center gap-3"
         >
           <CheckCircle2
