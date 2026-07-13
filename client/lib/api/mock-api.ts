@@ -4,6 +4,14 @@ import type { DiagnosticResult } from "@/lib/schemas/diagnostic.schema";
 import { mockAlphaCases, mockProjects } from "@/lib/mock/mock-projects";
 import { mockDiagnosticResults } from "@/lib/mock/mock-results";
 
+export type LeaderboardEntry = {
+  project: Project;
+  alphaCase: AlphaCase;
+  diagnosticResult: DiagnosticResult;
+  score: number;
+  rank: number;
+};
+
 let projects: Project[] = [...mockProjects];
 let alphaCases: AlphaCase[] = [...mockAlphaCases];
 let diagnosticResults: DiagnosticResult[] = [...mockDiagnosticResults];
@@ -201,4 +209,60 @@ export async function getDiagnosticResult(projectId: string) {
   }
 
   return result;
+}
+
+export async function getLeaderboardEntries() {
+  await delay();
+
+  const entries = diagnosticResults
+    .map((diagnosticResult) => {
+      const project = projects.find(
+        (item) => item.id === diagnosticResult.projectId,
+      );
+      const alphaCase = alphaCases.find(
+        (item) => item.projectId === diagnosticResult.projectId,
+      );
+
+      if (!project || !alphaCase) {
+        return null;
+      }
+
+      const riskPenalty = getRiskPenalty(diagnosticResult.risks);
+      const dsrBonus = diagnosticResult.metrics.dsrPass ? 15 : -15;
+      const score =
+        diagnosticResult.metrics.psr * 40 +
+        diagnosticResult.metrics.averageUniqueness * 25 +
+        diagnosticResult.metrics.sharpe * 10 -
+        diagnosticResult.metrics.drawdown * 0.2 -
+        riskPenalty +
+        dsrBonus;
+
+      return {
+        project,
+        alphaCase,
+        diagnosticResult,
+        score,
+      };
+    })
+    .filter((entry): entry is Omit<LeaderboardEntry, "rank"> => entry !== null)
+    .sort((left, right) => right.score - left.score);
+
+  return entries.map((entry, index) => ({
+    ...entry,
+    rank: index + 1,
+  }));
+}
+
+function getRiskPenalty(risks: DiagnosticResult["risks"]) {
+  const weights = {
+    low: 0,
+    medium: 5,
+    high: 12,
+    extreme: 25,
+  };
+
+  return Object.values(risks).reduce(
+    (total, risk) => total + weights[risk],
+    0,
+  );
 }

@@ -1,8 +1,9 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Download, ExternalLink } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, Pencil } from "lucide-react";
 
 import {
   getAlphaCase,
@@ -18,9 +19,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type DiagnosticReportProps = {
   projectId: string;
+  viewerMode?: "private" | "public";
 };
 
-export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
+export function DiagnosticReport({
+  projectId,
+  viewerMode = "private",
+}: DiagnosticReportProps) {
+  const isPublic = viewerMode === "public";
+
   const { data: project, isLoading: isProjectLoading } = useQuery({
     queryKey: ["project", projectId],
     queryFn: () => getProject(projectId),
@@ -46,15 +53,15 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
 
   if (isLoading) {
     return (
-      <AppShell assistantRole="report-assistant" assistantContextId="report">
+      <ReportFrame viewerMode={viewerMode}>
         <div className="px-8 py-10 text-neutral-400">Loading report...</div>
-      </AppShell>
+      </ReportFrame>
     );
   }
 
   if (!project || !alphaCase || isDiagnosticError || !diagnosticResult) {
     return (
-      <AppShell assistantRole="report-assistant" assistantContextId="report">
+      <ReportFrame viewerMode={viewerMode}>
         <div className="mx-auto max-w-4xl px-8 py-10">
           <Card className="border-neutral-800 bg-neutral-900 text-neutral-50">
             <CardHeader>
@@ -66,22 +73,28 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
                 report page.
               </p>
 
-              <Button asChild>
-                <Link href={routes.projectWorkspace(projectId)}>
-                  Back to workspace
-                </Link>
-              </Button>
+              {isPublic ? (
+                <Button asChild>
+                  <Link href={routes.leaderboard}>Back to leaderboard</Link>
+                </Button>
+              ) : (
+                <Button asChild>
+                  <Link href={routes.projectWorkspace(projectId)}>
+                    Back to workspace
+                  </Link>
+                </Button>
+              )}
             </CardContent>
           </Card>
         </div>
-      </AppShell>
+      </ReportFrame>
     );
   }
 
   const riskLevel = getOverallRiskLevel(diagnosticResult.risks);
 
   return (
-    <AppShell assistantRole="report-assistant" assistantContextId="report">
+    <ReportFrame viewerMode={viewerMode}>
       <div className="mx-auto max-w-5xl px-8 py-10">
         <div className="mb-8 flex items-start justify-between gap-6">
           <div>
@@ -90,13 +103,28 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
               variant="ghost"
               className="mb-4 px-0 text-neutral-400 hover:text-neutral-50"
             >
-              <Link href={routes.projectWorkspace(projectId)}>
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to workspace
-              </Link>
+              {isPublic ? (
+                <Link href={routes.leaderboard}>
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to leaderboard
+                </Link>
+              ) : (
+                <Link href={routes.projectWorkspace(projectId)}>
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to workspace
+                </Link>
+              )}
             </Button>
 
-            <p className="text-sm text-neutral-500">AFML Diagnostic Report</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-sm text-neutral-500">AFML Diagnostic Report</p>
+              <Badge
+                variant="outline"
+                className="border-neutral-700 text-neutral-400"
+              >
+                {isPublic ? "Public view" : "Owner view"}
+              </Badge>
+            </div>
 
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-50">
               {project.name}
@@ -110,15 +138,28 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
           </div>
 
           <div className="flex gap-2">
-            <Button variant="outline" className="border-neutral-800">
-              <Download className="mr-2 h-4 w-4" />
-              Markdown
-            </Button>
+            {isPublic ? (
+              <Button variant="outline" className="border-neutral-800">
+                <Download className="mr-2 h-4 w-4" />
+                Snapshot
+              </Button>
+            ) : (
+              <>
+                <Button asChild variant="outline" className="border-neutral-800">
+                  <Link href={routes.projectWorkspace(projectId)}>
+                    <Pencil className="mr-2 h-4 w-4" />
+                    Edit workspace
+                  </Link>
+                </Button>
 
-            <Button variant="outline" className="border-neutral-800">
-              <ExternalLink className="mr-2 h-4 w-4" />
-              Share
-            </Button>
+                <Button asChild variant="outline" className="border-neutral-800">
+                  <Link href={`${routes.projectReport(projectId)}?viewer=public`}>
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    Public view
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
 
@@ -300,6 +341,28 @@ export function DiagnosticReport({ projectId }: DiagnosticReportProps) {
           </Card>
         </div>
       </div>
+    </ReportFrame>
+  );
+}
+
+function ReportFrame({
+  viewerMode,
+  children,
+}: {
+  viewerMode: "private" | "public";
+  children: ReactNode;
+}) {
+  if (viewerMode === "public") {
+    return (
+      <main className="min-h-screen bg-neutral-950 text-neutral-50">
+        {children}
+      </main>
+    );
+  }
+
+  return (
+    <AppShell assistantRole="report-assistant" assistantContextId="report">
+      {children}
     </AppShell>
   );
 }

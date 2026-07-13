@@ -61,6 +61,7 @@ type UiState = {
   setAssistantOpen: (isOpen: boolean) => void;
   setAssistantLock: (locked: boolean) => void;
   setWorkspaceInitialized: () => void;
+  resetWorkspaceNavigation: () => void;
 };
 
 export const useUiStore = create<UiState>((set) => ({
@@ -100,6 +101,14 @@ export const useUiStore = create<UiState>((set) => ({
   setWorkspaceInitialized: () =>
     set({
       hasInitializedWorkspace: true,
+    }),
+
+  resetWorkspaceNavigation: () =>
+    set({
+      activeSectionId: "project-summary",
+      unlockedSectionIds: ["project-summary"],
+      assistantLock: false,
+      hasInitializedWorkspace: false,
     }),
 }));
 
