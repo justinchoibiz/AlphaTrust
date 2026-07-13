@@ -8,6 +8,13 @@ import { type SectionId, useUiStore } from "@/lib/store/ui-store";
 export function useActiveWorkspaceSection() {
   const setActiveSectionId = useUiStore((state) => state.setActiveSectionId);
   const assistantLock = useUiStore((state) => state.assistantLock);
+  const hasInitializedWorkspace = useUiStore(
+    (state) => state.hasInitializedWorkspace,
+  );
+
+  const setWorkspaceInitialized = useUiStore(
+    (state) => state.setWorkspaceInitialized,
+  );
 
   useEffect(() => {
     const elements = WORKSPACE_SECTION_IDS.map((sectionId) =>
@@ -33,7 +40,11 @@ export function useActiveWorkspaceSection() {
           return;
         }
         window.requestAnimationFrame(() => {
-          setActiveSectionId(visibleEntry.target.id as SectionId);
+          if (!hasInitializedWorkspace) {
+            setActiveSectionId(visibleEntry.target.id as SectionId);
+
+            setWorkspaceInitialized();
+          }
         });
       },
       {
@@ -47,5 +58,5 @@ export function useActiveWorkspaceSection() {
     return () => {
       observer.disconnect();
     };
-  }, [assistantLock, setActiveSectionId]);
+  }, [setActiveSectionId]);
 }

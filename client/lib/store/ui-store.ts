@@ -54,7 +54,6 @@ type UiState = {
   assistantLock: boolean;
   hasInitializedWorkspace: boolean;
 
-
   setActiveProjectId: (projectId: string) => void;
   setActiveSectionId: (sectionId: SectionId) => void;
   unlockSection: (sectionId: SectionId) => void;
@@ -92,7 +91,7 @@ export const useUiStore = create<UiState>((set) => ({
     })),
 
   setAssistantOpen: (isAssistantOpen) => set({ isAssistantOpen }),
-  
+
   setAssistantLock: (locked) =>
     set({
       assistantLock: locked,
